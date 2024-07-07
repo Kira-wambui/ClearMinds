@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>MindClarity - ADHD Journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css"></noscript>
+</head>
+<body class="is-preload">
+    <!-- Wrapper -->
+    <div id="wrapper">
+        <!-- Header -->
+        <header id="header">
+            <div class="inner">
+                <!-- Logo -->
+                <a href="index.html" class="logo">
+                    <span class="symbol"><img src="images/logo.jpg" alt="Brain Icon"></span><span class="title">MindClarity</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+                <header>
+                    <h1>ADHD Journal</h1>
+                    <p>Track your progress and reflect on your ADHD journey.</p>
+                </header>
+                <section>
+                    <form method="post" action="#" id="journalForm">
+                        <div class="fields">
+                            <div class="field half">
+                                <input type="date" name="date" id="date" required>
+                            </div>
+                            <div class="field">
+                                <textarea name="entry" id="entry" placeholder="Your journal entry..." required></textarea>
+                            </div>
+                        </div>
+                        <ul class="actions">
+                            <li><input type="submit" value="Save Entry" class="primary"></li>
+                        </ul>
+                    </form>
+                </section>
+                <section id="journalEntries">
+                    <h2>Your Journal Entries</h2>
+                    <!-- Entries will be populated here -->
+                </section>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer id="footer">
+            <div class="inner">
+                <ul class="copyright">
+                    <li>&copy; 2024 MindClarity. All rights reserved.</li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        document.getElementById('journalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const date = document.getElementById('date').value;
+            const entry = document.getElementById('entry').value;
+
+            fetch('http://localhost:3000/api/journal', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ date, entry })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                loadJournalEntries();
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        function loadJournalEntries() {
+            fetch('http://localhost:3000/api/journal')
+            .then(response => response.json())
+            .then(entries => {
+                const journalEntriesSection = document.getElementById('journalEntries');
+                journalEntriesSection.innerHTML = '';
+                entries.forEach(entry => {
+                    const entryElement = document.createElement('div');
+                    entryElement.classList.add('entry');
+                    entryElement.innerHTML = `
+                        <h3>${entry.date}</h3>
+                        <p>${entry.entry}</p>
+                    `;
+                    journalEntriesSection.appendChild(entryElement);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        document.addEventListener('DOMContentLoaded', loadJournalEntries);
+    </script>
+</body>
+</html>

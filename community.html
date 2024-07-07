@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>MindClarity - Community Stories</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css"></noscript>
+</head>
+<body class="is-preload">
+    <!-- Wrapper -->
+    <div id="wrapper">
+        <!-- Header -->
+        <header id="header">
+            <div class="inner">
+                <!-- Logo -->
+                <a href="index.html" class="logo">
+                    <span class="symbol"><img src="images/logo.jpg" alt="Brain Icon"></span><span class="title">MindClarity</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+                <header>
+                    <h1>Community Stories</h1>
+                    <p>Read and get inspired by the experiences of others in the ADHD community.</p>
+                </header>
+                <section id="stories">
+                    <!-- Stories will be populated here -->
+                </section>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer id="footer">
+            <div class="inner">
+                <ul class="copyright">
+                    <li>&copy; 2024 MindClarity. All rights reserved.</li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('http://localhost:3000/api/stories')
+            .then(response => response.json())
+            .then(stories => {
+                const storiesSection = document.getElementById('stories');
+                stories.forEach(story => {
+                    const storyElement = document.createElement('div');
+                    storyElement.classList.add('story');
+                    storyElement.innerHTML = `
+                        <h3>${story.name}</h3>
+                        <h4>Topic: ${story.topic}</h4>
+                        <p>${story.story}</p>
+                    `;
+                    storiesSection.appendChild(storyElement);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
