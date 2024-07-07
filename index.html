@@ -45,7 +45,7 @@
                 <header>
                     <h1>Welcome to MindClarity<br>Your ADHD Support Companion</h1>
                     <p>Living with ADHD means your brain works uniquely. At MindClarity, we provide tailored strategies to help you navigate overstimulation, manage stress, and unlock your potential. You're not alone, and we're here to help you find your clarity.</p>
-                    <a href="tel:+254797720215" class="button large primary pulse" id="needHelpNow">I Need Help Now</a>
+                    <a href="#" class="button large primary pulse" id="needHelpNow">I Need Help Now</a>
                 </header>
                 <section>
                     <h2>Focus Sounds</h2>
@@ -180,8 +180,15 @@
     <script>
         document.getElementById('needHelpNow').addEventListener('click', function(e) {
             e.preventDefault();
-            // This would be replaced with a call to your API
-            alert('Getting immediate help... (API call would happen here)');
+            fetch('http://localhost:3000/api/need-help-now', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => console.error('Error:', error));
         });
 
         document.getElementById('playFocusSound').addEventListener('click', function(e) {
@@ -193,8 +200,20 @@
 
         document.getElementById('shareStory').addEventListener('submit', function(e) {
             e.preventDefault();
-            // Validate and submit the form data
-            alert('Thanks for sharing! Your story will inspire others.');
+            const name = document.getElementById('name').value;
+            const topic = document.getElementById('topic').value;
+            const story = document.getElementById('story').value;
+
+            fetch('http://localhost:3000/api/share-story', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, topic, story })
+            })
+            .then(response => response.json())
+            .then(data => alert('Thanks for sharing! Your story will inspire others.'))
+            .catch(error => console.error('Error:', error));
         });
     </script>
 </body>
